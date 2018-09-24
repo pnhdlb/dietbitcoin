@@ -1,0 +1,22 @@
+[Unit]
+Description=DietBitcoin's distributed currency daemon
+After=network.target
+
+[Service]
+User=dietbitcoin
+Group=dietbitcoin
+
+Type=forking
+PIDFile=/var/lib/dietbitcoind/dietbitcoind.pid
+ExecStart=/usr/bin/dietbitcoind -daemon -pid=/var/lib/dietbitcoind/dietbitcoind.pid \
+-conf=/etc/dietbitcoin/dietbitcoin.conf -datadir=/var/lib/dietbitcoind -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

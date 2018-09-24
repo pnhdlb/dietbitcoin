@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=DietBitcoin Core
+Comment=Connect to the DietBitcoin P2P Network
+Comment[de]=Verbinde mit dem DietBitcoin peer-to-peer Netzwerk
+Comment[fr]=DietBitcoin, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=DietBitcoin, eşten eşe kriptografik sanal para birimi
+Exec=dietbitcoin-qt %u
+Terminal=false
+Type=Application
+Icon=dietbitcoin128
+MimeType=x-scheme-handler/dietbitcoin;
+Categories=Office;Finance;

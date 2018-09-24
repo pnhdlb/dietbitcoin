@@ -1,0 +1,6 @@
+usr/local/bin/dietbitcoin-qt usr/bin
+share/pixmaps/dietbitcoin32.xpm usr/share/pixmaps
+share/pixmaps/dietbitcoin16.xpm usr/share/pixmaps
+share/pixmaps/dietbitcoin128.png usr/share/pixmaps
+debian/dietbitcoin-qt.desktop usr/share/applications
+debian/dietbitcoin-qt.protocol usr/share/kde4/services/

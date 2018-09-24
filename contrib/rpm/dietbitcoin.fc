@@ -1,0 +1,8 @@
+/usr/bin/dietbitcoin-cli		--	gen_context(system_u:object_r:dietbitcoin_exec_t,s0)
+/usr/sbin/dietbitcoind		--	gen_context(system_u:object_r:dietbitcoin_exec_t,s0)
+/usr/lib(64)?/dietbitcoin/dietbitcoind		--	gen_context(system_u:object_r:dietbitcoin_exec_t,s0)
+
+/etc/dietbitcoin(/.*)?		gen_context(system_u:object_r:dietbitcoin_conf_t,s0)
+/var/lib/dietbitcoin(/.*)?		gen_context(system_u:object_r:dietbitcoin_var_lib_t,s0)
+
+(/var)?/run/dietbitcoind(/.*)?   gen_context(system_u:object_r:dietbitcoin_var_run_t,s0)

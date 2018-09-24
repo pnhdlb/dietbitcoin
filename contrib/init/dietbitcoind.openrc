@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/dietbitcoin/.dietbitcoin" ]; then
+	DIETBITCOIND_DEFAULT_DATADIR="/var/lib/dietbitcoin/.dietbitcoin"
+else
+	DIETBITCOIND_DEFAULT_DATADIR="/var/lib/dietbitcoind"
+fi
+
+DIETBITCOIND_CONFIGFILE=${DIETBITCOIND_CONFIGFILE:-/etc/dietbitcoin/dietbitcoin.conf}
+DIETBITCOIND_PIDDIR=${DIETBITCOIND_PIDDIR:-/var/run/dietbitcoind}
+DIETBITCOIND_PIDFILE=${DIETBITCOIND_PIDFILE:-${DIETBITCOIND_PIDDIR}/dietbitcoind.pid}
+DIETBITCOIND_DATADIR=${DIETBITCOIND_DATADIR:-${DIETBITCOIND_DEFAULT_DATADIR}}
+DIETBITCOIND_USER=${DIETBITCOIND_USER:-${DIETBITCOIN_USER:-dietbitcoin}}
+DIETBITCOIND_GROUP=${DIETBITCOIND_GROUP:-dietbitcoin}
+DIETBITCOIND_BIN=${DIETBITCOIND_BIN:-/usr/bin/dietbitcoind}
+DIETBITCOIND_NICE=${DIETBITCOIND_NICE:-${NICELEVEL:-0}}
+DIETBITCOIND_OPTS="${DIETBITCOIND_OPTS:-${DIETBITCOIN_OPTS}}"
+
+name="DietBitcoin Core Daemon"
+description="DietBitcoin cryptocurrency P2P network daemon"
+
+command="/usr/bin/dietbitcoind"
+command_args="-pid=\"${DIETBITCOIND_PIDFILE}\" \
+		-conf=\"${DIETBITCOIND_CONFIGFILE}\" \
+		-datadir=\"${DIETBITCOIND_DATADIR}\" \
+		-daemon \
+		${DIETBITCOIND_OPTS}"
+
+required_files="${DIETBITCOIND_CONFIGFILE}"
+start_stop_daemon_args="-u ${DIETBITCOIND_USER} \
+			-N ${DIETBITCOIND_NICE} -w 2000"
+pidfile="${DIETBITCOIND_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${DIETBITCOIND_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${DIETBITCOIND_USER}:${DIETBITCOIND_GROUP}" \
+	"${DIETBITCOIND_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${DIETBITCOIND_USER}:${DIETBITCOIND_GROUP}" \
+	"${DIETBITCOIND_PIDDIR}"
+
+	checkpath -f \
+	-o ${DIETBITCOIND_USER}:${DIETBITCOIND_GROUP} \
+	-m 0660 \
+	${DIETBITCOIND_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${DIETBITCOIND_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run dietbitcoind."
+		eerror "The setting must appear in ${DIETBITCOIND_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following"
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is also recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"DietBitcoin Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

@@ -1,0 +1,33 @@
+# /etc/conf.d/dietbitcoind: config file for /etc/init.d/dietbitcoind
+
+# Config file location
+#DIETBITCOIND_CONFIGFILE="/etc/dietbitcoin/dietbitcoin.conf"
+
+# What directory to write pidfile to?  (created and owned by $DIETBITCOIND_USER)
+#DIETBITCOIND_PIDDIR="/var/run/dietbitcoind"
+
+# What filename to give the pidfile
+#DIETBITCOIND_PIDFILE="${DIETBITCOIND_PIDDIR}/dietbitcoind.pid"
+
+# Where to write dietbitcoind data (be mindful that the blockchain is large)
+#DIETBITCOIND_DATADIR="/var/lib/dietbitcoind"
+
+# User and group to own dietbitcoind process
+#DIETBITCOIND_USER="dietbitcoin"
+#DIETBITCOIND_GROUP="dietbitcoin"
+
+# Path to dietbitcoind executable
+#DIETBITCOIND_BIN="/usr/bin/dietbitcoind"
+
+# Nice value to run dietbitcoind under
+#DIETBITCOIND_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#DIETBITCOIND_OPTS=""
+
+# The timeout in seconds OpenRC will wait for dietbitcoind to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+DIETBITCOIND_SIGTERM_TIMEOUT=60
