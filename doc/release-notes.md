@@ -1,12 +1,12 @@
-(note: this is a temporary file, to be added-to by anybody, and moved to
-release-notes at release time)
+DietBitcoin Core version *0.15.0.1* REVISION B is now available from:
 
-DietBitcoin Core version *0.15.1* is now available from:
+  <https://dietbitcoin.org/bin/dietbitcoin-core-0.15.0.1-revb/>
 
-  <https://dietbitcoin.org/bin/dietbitcoin-core-0.15.1/>
+and
 
-This is a new minor version release, including various bugfixes and
-performance improvements, as well as updated translations.
+  <https://dietbitcoincore.org/bin/dietbitcoin-core-0.15.0.1-revb/>
+
+This is a major bug fix for 0.15.0.1 Revision B
 
 Please report bugs using the issue tracker at GitHub:
 
@@ -62,11 +62,11 @@ Notable changes
 
 
 
-0.15.1 Change log
-=================
+0.15.0.1 Revision B Change log
+====================
 
-- `dumpwallet` no longer allows overwriting files. This is a security measure
-  as well as prevents dangerous user mistakes.
+-  validation.cpp was updated
+-  if (!CheckTransaction(*tx, state, true))
 
 Credits
 =======
