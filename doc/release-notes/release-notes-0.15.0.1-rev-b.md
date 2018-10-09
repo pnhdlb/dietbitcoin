@@ -1,12 +1,12 @@
-DietBitcoin Core version *0.15.0.1* is now available from:
+DietBitcoin Core version *0.15.0.1* REVISION B is now available from:
 
-  <https://dietbitcoin.org/bin/dietbitcoin-core-0.15.0.1/>
+  <https://dietbitcoin.org/bin/dietbitcoin-core-0.15.0.1-revb/>
 
 and
 
-  <https://dietbitcoincore.org/bin/dietbitcoin-core-0.15.0.1/>
+  <https://dietbitcoincore.org/bin/dietbitcoin-core-0.15.0.1-revb/>
 
-This is a minor bug fix for 0.15.0.
+This is a major bug fix for 0.15.0.1 Revision B
 
 Please report bugs using the issue tracker at GitHub:
 
@@ -67,12 +67,11 @@ After upgrade to 0.15.0, some clients would crash at startup because a custom
 fee setting was configured that no longer exists in the GUI. This is a minimal
 patch to avoid this issue from occuring.
 
-0.15.0.1 Change log
+0.15.0.1 Revision B Change log
 ====================
 
--  #11332 `46c8d23` Fix possible crash with invalid nCustomFeeRadio in QSettings (achow101, TheBlueMatt)
-
-Also the manpages were updated, as this was forgotten for 0.15.0.
+-  validation.cpp was updated
+-  if (!CheckTransaction(*tx, state, true))
 
 Credits
 =======
