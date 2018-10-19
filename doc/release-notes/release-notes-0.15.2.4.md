@@ -1,12 +1,8 @@
-DietBitcoin Core version *0.15.0.1* REVISION B is now available from:
+DietBitcoin Core version *0.15.2.4* is now available from:
 
-  <https://dietbitcoin.org/bin/dietbitcoin-core-0.15.0.1-revb/>
+  <https://github.com/dietbitcoin/dietbitcoin/releases>
 
-and
-
-  <https://dietbitcoincore.org/bin/dietbitcoin-core-0.15.0.1-revb/>
-
-This is a major bug fix for 0.15.0.1 Revision B
+This is a major bug fix for 0.15.2.4
 
 Please report bugs using the issue tracker at GitHub:
 
@@ -67,11 +63,11 @@ After upgrade to 0.15.0, some clients would crash at startup because a custom
 fee setting was configured that no longer exists in the GUI. This is a minimal
 patch to avoid this issue from occuring.
 
-0.15.0.1 Revision B Change log
+0.15.2.4
 ====================
 
--  validation.cpp was updated
--  if (!CheckTransaction(*tx, state, true))
+- update in chainparams.cpp to retarget mining difficulty every 24 hours
+
 
 Credits
 =======
