@@ -15,7 +15,7 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 {
     assert(pindexLast != nullptr);
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
-    int64_t difficultyAdjustmentInterval = params.DifficultyAdjustmentInterval();
+    int64_t difficultyAdjustmentInterval = params.GetDifficultyAdjustmentInterval(pindexLast->nHeight+1);
     // Difficulty changes to 1 on fork block, so that nBits of block
     // [fork height] + 1 is minimum difficulty. We keep returning this for
     // one full difficulty adjustment interval, and then let the system handle
@@ -69,11 +69,18 @@ unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nF
     if (params.fPowNoRetargeting)
         return pindexLast->nBits;
 
-    const int64_t retargetTimespan = params.newPowTargetTimespan;
+    int64_t retargetTimespan;
     const int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
     int64_t nModulatedTimespan = nActualTimespan;
     int64_t nMaxTimespan;
     int64_t nMinTimespan;
+     
+    if (pindexLast->nHeight+1 >= params.nChangePowHeight) 
+    {
+       retargetTimespan = params.newPowTargetTimespan;
+    } else {    
+       retargetTimespan = params.nPowTargetTimespan;
+    }    
 
     if (params.DigishieldCalculation) //DigiShield implementation 
     {
