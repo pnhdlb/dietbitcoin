@@ -107,6 +107,7 @@ public:
         consensus.nPowTargetSpacing = 10 * 60;
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.DigishieldCalculation = true;
+        consensus.nChangePowHeight = 40572;
         consensus.fPowNoRetargeting = false;
         consensus.nRuleChangeActivationThreshold = 1916; // 95% of 2016
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
@@ -154,6 +155,7 @@ public:
 
         // Note that of those with the service bits flag, most only support a subset of possible options
         vSeeds.emplace_back("quickseed.in", true); //  seed1
+        vSeeds.emplace_back("5.189.183.249", true); //  seed2
  //       vSeeds.emplace_back("seed2.quickseed.in", true); //  seed2
    //     vSeeds.emplace_back("putseeedernamehere.ch", false); //
     //    vSeeds.emplace_back("putseedernamehere.ch", false); // 
@@ -222,6 +224,7 @@ public:
         consensus.fPowAllowMinDifficultyBlocks = false;
         consensus.fPowNoRetargeting = false;
         consensus.DigishieldCalculation = true;
+        consensus.nChangePowHeight = 40572;
         consensus.nRuleChangeActivationThreshold = 1512; // 75% for testchains
         consensus.nMinerConfirmationWindow = 2016; // nPowTargetTimespan / nPowTargetSpacing
         consensus.vDeployments[Consensus::DEPLOYMENT_TESTDUMMY].bit = 28;
