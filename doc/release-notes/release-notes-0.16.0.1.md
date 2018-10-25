@@ -1,8 +1,8 @@
-DietBitcoin Core version *0.16.0.1* is now available from:
+DietBitcoin Core version *0.16.0.2* is now available from:
 
   <https://github.com/dietbitcoin/dietbitcoin/releases>
 
-This is a major bug fix for 0.16.0.1
+This is a major bug fix for 0.16.0.2
 
 Please report bugs using the issue tracker at GitHub:
 
@@ -55,7 +55,7 @@ frequently tested on them.
 
 Notable changes
 ===============
- 0.16.0.1
+ 0.16.0.2
 ====================
 
 - Digishield Upgrade
