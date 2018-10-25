@@ -59,6 +59,7 @@ struct Params {
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
     bool DigishieldCalculation;
+    int nChangePowHeight;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
     int64_t newPowTargetTimespan;
