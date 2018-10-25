@@ -58,11 +58,18 @@ struct Params {
     uint256 powLimit;
     bool fPowAllowMinDifficultyBlocks;
     bool fPowNoRetargeting;
+    bool DigishieldCalculation;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
     int64_t newPowTargetTimespan;
-    int64_t DifficultyAdjustmentInterval() const { return newPowTargetTimespan / nPowTargetSpacing; }
-    bool DigishieldCalculation;
+    int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+    int64_t DifficultyAdjustmentIntervalV2() const { return newPowTargetTimespan / nPowTargetSpacing; }
+     bool IsChangePowActive(int height) const {
+        return height >= nChangePowHeight;
+    }
+    int64_t GetDifficultyAdjustmentInterval(int height) const {
+        return IsChangePowActive(height) ? DifficultyAdjustmentIntervalV2() : DifficultyAdjustmentInterval();
+    }
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 };
