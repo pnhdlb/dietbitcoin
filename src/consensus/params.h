@@ -45,6 +45,7 @@ struct Params {
     int BIP65Height;
     /** Block height at which BIP66 becomes active */
     int BIP66Height;
+
     /**
      * Minimum blocks including miner confirmation of the total of 2016 blocks in a retargeting period,
      * (nPowTargetTimespan / nPowTargetSpacing) which is also used for BIP9 deployments.
@@ -59,7 +60,9 @@ struct Params {
     bool fPowNoRetargeting;
     int64_t nPowTargetSpacing;
     int64_t nPowTargetTimespan;
-    int64_t DifficultyAdjustmentInterval() const { return nPowTargetTimespan / nPowTargetSpacing; }
+    int64_t newPowTargetTimespan;
+    int64_t DifficultyAdjustmentInterval() const { return newPowTargetTimespan / nPowTargetSpacing; }
+    bool DigishieldCalculation;
     uint256 nMinimumChainWork;
     uint256 defaultAssumeValid;
 };
