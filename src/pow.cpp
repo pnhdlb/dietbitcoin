@@ -15,18 +15,18 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
 {
     assert(pindexLast != nullptr);
     unsigned int nProofOfWorkLimit = UintToArith256(params.powLimit).GetCompact();
-
+    int64_t difficultyAdjustmentInterval = params.DifficultyAdjustmentInterval();
     // Difficulty changes to 1 on fork block, so that nBits of block
     // [fork height] + 1 is minimum difficulty. We keep returning this for
     // one full difficulty adjustment interval, and then let the system handle
     // the difficulty adjustments as normal.
     if (pindexLast->nHeight >= FORK_BLOCK &&
-        pindexLast->nHeight <= FORK_BLOCK + params.DifficultyAdjustmentInterval()) {
+        pindexLast->nHeight <= FORK_BLOCK + difficultyAdjustmentInterval) {
         return nProofOfWorkLimit;
     }
 
     // Only change once per difficulty adjustment interval
-    if ((pindexLast->nHeight + 1) % params.DifficultyAdjustmentInterval() != 0) {
+    if ((pindexLast->nHeight + 1) % difficultyAdjustmentInterval != 0) {
         if (params.fPowAllowMinDifficultyBlocks) {
             // Special difficulty rule for testnet:
             // If the new block's timestamp is more than 2* 10 minutes
@@ -36,46 +36,77 @@ unsigned int GetNextWorkRequired(const CBlockIndex* pindexLast, const CBlockHead
             else {
                 // Return the last non-special-min-difficulty-rules-block
                 const CBlockIndex* pindex = pindexLast;
-                while (pindex->pprev && pindex->nHeight % params.DifficultyAdjustmentInterval() != 0 && pindex->nBits == nProofOfWorkLimit)
+                while (pindex->pprev && pindex->nHeight % difficultyAdjustmentInterval != 0 && pindex->nBits == nProofOfWorkLimit)
                     pindex = pindex->pprev;
                 return pindex->nBits;
             }
         }
         return pindexLast->nBits;
     }
+    uint32_t nHeight = pindexLast->nHeight + 1;
+  
 
-    // Go back by what we want to be 14 days worth of blocks
-    int nHeightFirst = pindexLast->nHeight - (params.DifficultyAdjustmentInterval() - 1);
+    int blockstogoback = difficultyAdjustmentInterval-1;
+    if ((pindexLast->nHeight+1) != difficultyAdjustmentInterval)
+        blockstogoback = difficultyAdjustmentInterval;
+
+
+    int nHeightFirst = pindexLast->nHeight - blockstogoback;
     assert(nHeightFirst >= 0);
-    const CBlockIndex* pindexFirst = pindexLast->GetAncestor(nHeightFirst);
+    const CBlockIndex* pindexFirst = pindexLast;
+    for (int i = 0; pindexFirst && i < blockstogoback; i++)
+        pindexFirst = pindexFirst->pprev;
     assert(pindexFirst);
 
+
+
     return CalculateNextWorkRequired(pindexLast, pindexFirst->GetBlockTime(), params);
-}
+    }
+
 
 unsigned int CalculateNextWorkRequired(const CBlockIndex* pindexLast, int64_t nFirstBlockTime, const Consensus::Params& params)
 {
     if (params.fPowNoRetargeting)
         return pindexLast->nBits;
 
+    const int64_t retargetTimespan = params.newPowTargetTimespan;
+    const int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
+    int64_t nModulatedTimespan = nActualTimespan;
+    int64_t nMaxTimespan;
+    int64_t nMinTimespan;
+
+    if (params.DigishieldCalculation) //DigiShield implementation 
+    {
+        nModulatedTimespan = retargetTimespan + (nModulatedTimespan - retargetTimespan) / 8;
+        nMinTimespan = retargetTimespan - (retargetTimespan / 4);
+        nMaxTimespan = retargetTimespan + (retargetTimespan / 2);
+    } else {
+        nMinTimespan = retargetTimespan / 4;
+        nMaxTimespan = retargetTimespan * 4;
+    }
+
     // Limit adjustment step
-    int64_t nActualTimespan = pindexLast->GetBlockTime() - nFirstBlockTime;
-    if (nActualTimespan < params.nPowTargetTimespan / 4)
-        nActualTimespan = params.nPowTargetTimespan / 4;
-    if (nActualTimespan > params.nPowTargetTimespan * 4)
-        nActualTimespan = params.nPowTargetTimespan * 4;
+    if (nModulatedTimespan < nMinTimespan)
+        nModulatedTimespan = nMinTimespan;
+    else if (nModulatedTimespan > nMaxTimespan)
+        nModulatedTimespan = nMaxTimespan;
 
     // Retarget
     const arith_uint256 bnPowLimit = UintToArith256(params.powLimit);
     arith_uint256 bnNew;
+    arith_uint256 bnOld;
     bnNew.SetCompact(pindexLast->nBits);
-    bnNew *= nActualTimespan;
-    bnNew /= params.nPowTargetTimespan;
+    bnOld = bnNew;
+    bnNew *= nModulatedTimespan;
+    bnNew /= retargetTimespan;
 
     if (bnNew > bnPowLimit)
         bnNew = bnPowLimit;
 
+
+
     return bnNew.GetCompact();
+
 }
 
 bool CheckProofOfWork(uint256 hash, unsigned int nBits, const Consensus::Params& params, uint256* best)
