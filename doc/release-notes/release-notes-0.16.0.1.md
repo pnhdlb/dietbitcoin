@@ -1,8 +1,8 @@
-DietBitcoin Core version *0.15.2.4* is now available from:
+DietBitcoin Core version *0.16.0.1* is now available from:
 
   <https://github.com/dietbitcoin/dietbitcoin/releases>
 
-This is a major bug fix for 0.15.2.4
+This is a major bug fix for 0.16.0.1
 
 Please report bugs using the issue tracker at GitHub:
 
@@ -55,18 +55,10 @@ frequently tested on them.
 
 Notable changes
 ===============
-
-GUI startup crash issue
--------------------------
-
-After upgrade to 0.15.0, some clients would crash at startup because a custom
-fee setting was configured that no longer exists in the GUI. This is a minimal
-patch to avoid this issue from occuring.
-
-0.15.2.4
+ 0.16.0.1
 ====================
 
-- update in chainparams.cpp to retarget mining difficulty every 24 hours
+- Digishield Upgrade
 
 
 Credits
